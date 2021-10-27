@@ -8,13 +8,14 @@ on:
 
 
 jobs:
-  deploy-elasticsearch:
-    name: Deploy elasticsearch
-    runs-on: ubuntu-latest
+  deploy:
 
     strategy:
       matrix :
         app: [es_amundsen_atlas,atlas,amundsenfrontend,amundsenmetadata,amundsensearch]
+
+    name: Deploy ${{ matrix.app }}}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
