@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: amundsensearch
+  name: amundsensearch
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amundsensearch
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: amundsensearch
+    spec:
+      containers:
+        - env:
+          - name: PROXY_ENDPOINT
+            value: {{ required "Missing value PROXY_ENDPOINT" .Values.PROXY_ENDPOINT }}
+          name: amundsensearch
+          image: {{ required "Missing value AMUNDSEN_SEARCH_IMAGE_NAME" .Values.AMUNDSEN_SEARCH_IMAGE_NAME }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
+          resources:
+            requests:
+              memory: {{ required "Missing value AMUNDSEN_SEARCH_MEMORY" .Values.AMUNDSEN_SEARCH_MEMORY | quote }}
+      restartPolicy: Always
+status: {}

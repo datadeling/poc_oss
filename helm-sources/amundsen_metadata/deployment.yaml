@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: amundsenmetadata
+  name: amundsenmetadata
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amundsenmetadata
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: amundsenmetadata
+    spec:
+      containers:
+        - env:
+          - name: CREDENTIALS_PROXY_USER
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: CREDENTIALS_PROXY_USER
+          - name: CREDENTIALS_PROXY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: CREDENTIALS_PROXY_PASSWORD
+          - name: PROXY_HOST
+            value: {{ required "Missing value PROXY_HOST" .Values.PROXY_HOST }}
+          - name: PROXY_PORT
+            value: {{ required "Missing value PROXY_PORT" .Values.PROXY_PORT }}
+          - name: PROXY_ENCRYPTED
+            value: {{ required "Missing value PROXY_ENCRYPTED" .Values.PROXY_ENCRYPTED | quote }}
+          - name: PROXY_CLIENT
+            value: {{ required "Missing value PROXY_HOST" .Values.PROXY_HOST }}
+          - name: METADATA_SVC_CONFIG_MODULE_CLASS
+            value: {{ required "Missing value METADATA_SVC_CONFIG_MODULE_CLASS" .Values.METADATA_SVC_CONFIG_MODULE_CLASS }}
+          name: amundsenmetadata
+          image: {{ required "Missing value AMUNDSEN_METADATA_IMAGE_NAME" .Values.AMUNDSEN_METADATA_IMAGE_NAME }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5002
+          resources:
+            requests:
+              memory: {{ required "Missing value AMUNDSEN_METADATA_MEMORY" .Values.AMUNDSEN_METADATA_MEMORY | quote }}
+      restartPolicy: Always
+status: {}

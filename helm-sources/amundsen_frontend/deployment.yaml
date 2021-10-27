@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: amundsenfrontend
+  name: amundsenfrontend
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amundsenfrontend
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: amundsenfrontend
+    spec:
+      containers:
+        - env:
+          - name: SEARCHSERVICE_BASE
+            value: {{ required "Missing value SEARCHSERVICE_BASE" .Values.SEARCHSERVICE_BASE }}
+          - name: METADATASERVICE_BASE
+            value: {{ required "Missing value METADATASERVICE_BASE" .Values.METADATASERVICE_BASE }}
+          name: amundsenfrontend
+          image: {{ required "Missing value AMUNDSEN_FRONTEND_IMAGE_NAME" .Values.AMUNDSEN_FRONTEND_IMAGE_NAME }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              memory: {{ required "Missing value AMUNDSEN_FRONTEND_MEMORY" .Values.AMUNDSEN_FRONTEND_MEMORY | quote }}
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 150
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+      restartPolicy: Always
+status: {}

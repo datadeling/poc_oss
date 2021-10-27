@@ -1,0 +1,33 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  creationTimestamp: null
+  labels:
+    app: es_amundsen_atlas-claim0
+  name: es_amundsen_atlas-claim0
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+spec:
+  storageClassName: ""
+  volumeName: {{ required "Missing value ES_VOLUMENAME" .Values.ES_VOLUMENAME }}
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ required "Missing value ES_STORAGESIZE" .Values.ES_STORAGESIZE | quote }}
+status: {}
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ required "Missing value ES_VOLUMENAME" .Values.ES_VOLUMENAME }}
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+spec:
+  storageClassName: ""
+  capacity:
+    storage: {{ required "Missing value ES_STORAGESIZE" .Values.ES_STORAGESIZE | quote }}
+  accessModes:
+    - ReadWriteOnce
+  gcePersistentDisk:
+    pdName: {{ required "Missing value ES_VOLUMENAME" .Values.ES_VOLUMENAME }}
+    fsType: ext4
