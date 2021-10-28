@@ -37,7 +37,7 @@ spec:
             - "777"
             - /usr/share/elasticsearch/data
           volumeMounts:
-          - name: es_amundsen_atlas-claim0
+          - name: es-amundsen-atlas-claim0
             mountPath: "/usr/share/elasticsearch/data"
           securityContext:
             privileged: true
@@ -63,10 +63,10 @@ spec:
             memory: {{ required "Missing value ES_MEMORY" .Values.ES_MEMORY | quote }}
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
-          name: es_amundsen_atlas-claim0
+          name: es-amundsen-atlas-claim0
       restartPolicy: Always
       volumes:
       - name: es_amundsen_atlas-claim0
         persistentVolumeClaim:
-          claimName: es_amundsen_atlas-claim0
+          claimName: es-amundsen-atlas-claim0
 status: {}
