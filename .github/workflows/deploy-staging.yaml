@@ -14,18 +14,18 @@ jobs:
       matrix :
         app: [es_amundsen_atlas,atlas,amundsenfrontend,amundsenmetadata,amundsensearch]
 
-    name: Deploy ${{ matrix.app }}}
+    name: Deploy ${{ matrix.app }}
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Apply Helm template ${{ matrix.app }}}
+      - name: Apply Helm template ${{ matrix.app }}
         run: |
           helm template \
-          ./helm-sources/${{ matrix.app }}}/ > ./kubectlapply-${{ matrix.app }}}.yaml
-          chmod o+w ./kubectlapply-${{ matrix.app }}}.yaml
-          cat kubectlapply-${{ matrix.app }}}.yaml
+          ./helm-sources/${{ matrix.app }}/ > ./kubectlapply-${{ matrix.app }}.yaml
+          chmod o+w ./kubectlapply-${{ matrix.app }}.yaml
+          cat kubectlapply-${{ matrix.app }}.yaml
 
       - name: Setup gcloud CLI for deploy
         uses: google-github-actions/setup-gcloud@master
@@ -36,9 +36,9 @@ jobs:
       - name: Deploy to GCP
         run: |
           gcloud container clusters get-credentials datafabrikken-dev --region europe-north1-a --project datafabrikken-dev
-          kubectl apply -f ./kubectlapply-${{ matrix.app }}}.yaml --force
-          if ! kubectl --namespace=staging rollout status deployment ${{ matrix.app }}}; then
-            kubectl --namespace=staging rollout undo deployment ${{ matrix.app }}}
-            kubectl --namespace=staging rollout status deployment ${{ matrix.app }}}
+          kubectl apply -f ./kubectlapply-${{ matrix.app }}.yaml --force
+          if ! kubectl --namespace=staging rollout status deployment ${{ matrix.app }}; then
+            kubectl --namespace=staging rollout undo deployment ${{ matrix.app }}
+            kubectl --namespace=staging rollout status deployment ${{ matrix.app }}
             exit 1
           fi
