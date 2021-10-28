@@ -1,4 +1,4 @@
-# Default values for poc_oos.
+# Default values for poc_oss.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -32,7 +32,7 @@ ATLAS_MEMORY: "1000Mi"
 
 #elasticsearch
 ES_CLUSTERNAME: elasticsearch
-ES_CLUSTERNODES: es_amundsen_atlas:9300
+ES_CLUSTERNODES: es_amundsen_atlas:9300 # maybe change to 9200
 ES_SECURITY: "false"
 ES_MEMORY: "5000Mi"
 ES_IMAGE: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
