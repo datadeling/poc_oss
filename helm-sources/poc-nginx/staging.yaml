@@ -3,3 +3,4 @@
 # Declare variables to be passed into your templates.
 
 POC_NGINX_MEMORY: "10Mi"
+NAMESPACE: staging
