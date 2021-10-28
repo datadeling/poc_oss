@@ -23,7 +23,7 @@ jobs:
       - name: Apply Helm template ${{ matrix.app }}
         run: |
           helm template \
-          -f ./helm-sources/staging-values.yaml \
+          -f ./helm-sources/${{ matrix.app }}/staging.yaml \
           ./helm-sources/${{ matrix.app }}/ > ./kubectlapply-${{ matrix.app }}.yaml
           chmod o+w ./kubectlapply-${{ matrix.app }}.yaml
           cat kubectlapply-${{ matrix.app }}.yaml
