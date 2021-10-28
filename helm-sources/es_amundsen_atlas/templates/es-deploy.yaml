@@ -26,6 +26,11 @@ spec:
             - sysctl
             - -w
             - vm.max_map_count=262144
+          securityContext:
+            privileged: true
+        - name: increase-ulimits
+          image: {{ required "Missing value ES_BUSY_IMAGE" .Values.ES_BUSY_IMAGE }}
+          command:
             - sysctl
             - fd.file-max=65536
           securityContext:

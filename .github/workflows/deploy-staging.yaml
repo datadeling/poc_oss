@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix :
-        app: [es_amundsen_atlas,atlas,amundsenfrontend,amundsenmetadata,amundsensearch]
+        app: [es-amundsen-atlas,atlas,amundsenfrontend,amundsenmetadata,amundsensearch]
 
     name: Deploy ${{ matrix.app }}
     runs-on: ubuntu-latest

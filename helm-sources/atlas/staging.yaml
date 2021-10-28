@@ -2,6 +2,6 @@
 NAMESPACE: staging
 
 #apache_atlas
-ATLAS_IMAGE_NAME: wbass/rokku-dev-apache-atlas:0.1.5
+ATLAS_IMAGE_NAME: wbaa/rokku-dev-apache-atlas:0.1.5
 ATLAS_KICKSTART_AMUNDSEN: "true"
 ATLAS_MEMORY: "1000Mi"
