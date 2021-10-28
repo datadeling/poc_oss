@@ -38,8 +38,8 @@ jobs:
         run: |
           gcloud container clusters get-credentials datafabrikken-dev --region europe-north1-a --project datafabrikken-dev
           kubectl apply -f ./kubectlapply-${{ matrix.app }}.yaml --force
-          if ! kubectl --namespace=staging rollout status deployment ${{ matrix.app }}; then
-            kubectl --namespace=staging rollout undo deployment ${{ matrix.app }}
-            kubectl --namespace=staging rollout status deployment ${{ matrix.app }}
-            exit 1
-          fi
+#          if ! kubectl --namespace=staging rollout status deployment ${{ matrix.app }}; then
+#            kubectl --namespace=staging rollout undo deployment ${{ matrix.app }}
+#            kubectl --namespace=staging rollout status deployment ${{ matrix.app }}
+#            exit 1
+#          fi
