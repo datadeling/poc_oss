@@ -3,5 +3,5 @@ NAMESPACE: staging
 
 #amundsen_search
 AMUNDSEN_SEARCH_IMAGE_NAME: amundsendev/amundsen-search:latest
-PROXY_ENDPOINT: es_amundsen_atlas
+PROXY_ENDPOINT: es-amundsen-atlas
 AMUNDSEN_SEARCH_MEMORY: "1000Mi"

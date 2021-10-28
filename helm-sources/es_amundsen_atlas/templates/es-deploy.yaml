@@ -3,21 +3,21 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: es_amundsen_atlas
-  name: es_amundsen_atlas
+    app: es-amundsen-atlas
+  name: es-amundsen-atlas
   namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: es_amundsen_atlas
+      app: es-amundsen-atlas
   strategy:
     type: Recreate
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: es_amundsen_atlas
+        app: es-amundsen-atlas
     spec:
       initContainers:
         - name: increase-the-vm-max-map-count
@@ -54,7 +54,7 @@ spec:
               fieldPath: metadata.name
         image: {{ required "Missing value ES_IMAGE" .Values.ES_IMAGE }}
         imagePullPolicy: Always
-        name: es_amundsen_atlas
+        name: es-amundsen-atlas
         ports:
         - containerPort: 9200
         - containerPort: 9300
@@ -66,7 +66,7 @@ spec:
           name: es-amundsen-atlas-claim0
       restartPolicy: Always
       volumes:
-      - name: es_amundsen_atlas-claim0
+      - name: es-amundsen-atlas-claim0
         persistentVolumeClaim:
           claimName: es-amundsen-atlas-claim0
 status: {}

@@ -4,8 +4,8 @@ metadata:
   annotations:
   creationTimestamp: null
   labels:
-    app: es_amundsen_atlas
-  name: es_amundsen_atlas
+    app: es-amundsen-atlas
+  name: es-amundsen-atlas
   namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
 spec:
   type: NodePort
@@ -17,6 +17,6 @@ spec:
     port: 9300
     targetPort: 9300
   selector:
-    app: es_amundsen_atlas
+    app: es-amundsen-atlas
 status:
   loadBalancer: {}
