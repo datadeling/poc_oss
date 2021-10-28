@@ -38,7 +38,10 @@ spec:
           - name: PROXY_ENCRYPTED
             value: {{ required "Missing value PROXY_ENCRYPTED" .Values.PROXY_ENCRYPTED | quote }}
           - name: PROXY_CLIENT
-            value: {{ required "Missing value PROXY_HOST" .Values.PROXY_HOST }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: PROXY_CLIENT
           - name: METADATA_SVC_CONFIG_MODULE_CLASS
             value: {{ required "Missing value METADATA_SVC_CONFIG_MODULE_CLASS" .Values.METADATA_SVC_CONFIG_MODULE_CLASS }}
           name: amundsenmetadata
