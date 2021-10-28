@@ -1,0 +1,40 @@
+name: Deploy poc-oss-ingress (ipv4)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-ipv4:
+    name: Deploy ingress(ipv4)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create yaml file from secret
+        id: write_file
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: 'secret.yaml'
+          encodedString: ${{ secrets.POC_OSS_INGRESS_STAGING_IPV4 }}
+
+      - name: Apply Helm template
+        run: |
+          helm template -f ${{ steps.write_file.outputs.filePath }} \
+          ./helm-sources/staging-poc-oss-ingress-config/ > ./kubectlapply.yaml
+          chmod o+w ./kubectlapply.yaml
+          cat kubectlapply.yaml
+
+      - name: Setup gcloud CLI for deploy
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.DATAFABRIKKEN_DEV_AUTODEPLOY }}
+          export_default_credentials: true
+
+      - name: Deploy to GCP
+        run: |
+          gcloud container clusters get-credentials datafabrikken-dev --region europe-north1-a --project datafabrikken-dev
+          kubectl apply -f ./kubectlapply.yaml --force
