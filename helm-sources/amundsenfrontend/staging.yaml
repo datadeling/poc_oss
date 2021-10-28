@@ -5,4 +5,4 @@ NAMESPACE: staging
 AMUNDSEN_FRONTEND_IMAGE_NAME: amundsendev/amundsen-frontend:latest
 SEARCHSERVICE_BASE: http://amundsensearch:5001
 METADATASERVICE_BASE: http://amundsenmetadata:5002
-AUNDSEN_FRONTEND_MEMORY: "100Mi"
+AMUNDSEN_FRONTEND_MEMORY: "100Mi"
