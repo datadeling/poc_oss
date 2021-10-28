@@ -23,7 +23,8 @@ jobs:
 
       - name: Apply Helm template
         run: |
-          helm template -f ${{ steps.write_file.outputs.filePath }} \
+          helm template \
+          -f ${{ steps.write_file.outputs.filePath }} \
           ./helm-sources/staging-poc-oss-ingress-config/ > ./kubectlapply.yaml
           chmod o+w ./kubectlapply.yaml
           cat kubectlapply.yaml

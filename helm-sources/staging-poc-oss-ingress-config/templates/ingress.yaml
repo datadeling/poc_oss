@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ required "Missing value POC_OSS_INGRESSNAME" .Values.POC_OSS_INGRESSNAME }}
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.global-static-ip-name: {{ required "Missing value POC_OSS_INGRESS_IP_NAME" .Values.POC_OSS_INGRESS_IP_NAME }}
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /amundsen
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: poc-nginx
+            port:
+              number: 8080
+      - path: /atlas
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: poc-nginx
+            port:
+              number: 8080
