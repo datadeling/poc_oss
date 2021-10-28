@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: atlas
+  name: atlas
+  namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: atlas
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: atlas
+    spec:
+      containers:
+        - env:
+          - name: ATLAS_KICKSTART_AMUNDSEN
+            value: {{ required "Missing value ATLAS_KICKSTART_AMUNDSEN" .Values.ATLAS_KICKSTART_AMUNDSEN | quote }}
+          name: atlas
+          image: {{ required "Missing value ATLAS_IMAGE_NAME" .Values.ATLAS_IMAGE_NAME }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 21000
+          resources:
+            requests:
+              memory: {{ required "Missing value ATLAS_MEMORY" .Values.ATLAS_MEMORY | quote }}
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 150
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 5
+      restartPolicy: Always
+status: {}

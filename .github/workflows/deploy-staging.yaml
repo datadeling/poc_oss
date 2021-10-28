@@ -1,0 +1,44 @@
+name: Deploy Atlas + Amundsen.io to staging environment when merged to main branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+
+jobs:
+  deploy:
+
+    strategy:
+      matrix :
+        app: [es_amundsen_atlas,atlas,amundsenfrontend,amundsenmetadata,amundsensearch]
+
+    name: Deploy ${{ matrix.app }}}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Apply Helm template ${{ matrix.app }}}
+        run: |
+          helm template \
+          ./helm-sources/${{ matrix.app }}}/ > ./kubectlapply-${{ matrix.app }}}.yaml
+          chmod o+w ./kubectlapply-${{ matrix.app }}}.yaml
+          cat kubectlapply-${{ matrix.app }}}.yaml
+
+      - name: Setup gcloud CLI for deploy
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.DATAFABRIKKEN_DEV_AUTODEPLOY }}
+          export_default_credentials: true
+
+      - name: Deploy to GCP
+        run: |
+          gcloud container clusters get-credentials datafabrikken-dev --region europe-north1-a --project datafabrikken-dev
+          kubectl apply -f ./kubectlapply-${{ matrix.app }}}.yaml --force
+          if ! kubectl --namespace=staging rollout status deployment ${{ matrix.app }}}; then
+            kubectl --namespace=staging rollout undo deployment ${{ matrix.app }}}
+            kubectl --namespace=staging rollout status deployment ${{ matrix.app }}}
+            exit 1
+          fi

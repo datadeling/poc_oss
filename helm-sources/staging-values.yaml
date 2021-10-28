@@ -1,0 +1,41 @@
+# Default values for poc_oss.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+#namespace
+NAMESPACE: staging
+
+#amundsen_frontend
+AMUNDSEN_FRONTEND_IMAGE_NAME: amundsendev/amundsen-frontend:latest
+SEARCHSERVICE_BASE: http://amundsensearch:5001
+METADATASERVICE_BASE: http://amundsenmetadata:5002
+AUNDSEN_FRONTEND_MEMORY: "100Mi"
+
+#amundsen_metadata
+AMUNDSEN_METADATA_IMAGE_NAME: amundsendev/amundsen-metadata:latest
+PROXY_HOST: atlas
+PROXY_PORT: 21000
+PROXY_ENCRYPTED: "False"
+PROXY_CLIENT: ATLAS
+METADATA_SVC_CONFIG_MODULE_CLASS: metadata_service.config.AtlasConfig
+AUNDSEN_METADATA_MEMORY: "1000Mi"
+
+#amundsen_search
+AMUNDSEN_SEARCH_IMAGE_NAME: amundsendev/amundsen-search:latest
+PROXY_ENDPOINT: es_amundsen_atlas
+AUNDSEN_SEARCH_MEMORY: "1000Mi"
+
+#apache_atlas
+ATLAS_IMAGE_NAME: wbass/rokku-dev-apache-atlas:0.1.5
+ATLAS_KICKSTART_AMUNDSEN: "true"
+ATLAS_MEMORY: "1000Mi"
+
+#elasticsearch
+ES_CLUSTERNAME: elasticsearch
+ES_CLUSTERNODES: es_amundsen_atlas:9300 # maybe change to 9200
+ES_SECURITY: "false"
+ES_MEMORY: "5000Mi"
+ES_IMAGE: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
+ES_BUSY_IMAGE: busybox:1.31.1
+ES_VOLUMENAME: poc-oss-staging-es
+ES_STORAGESIZE: "9G"
