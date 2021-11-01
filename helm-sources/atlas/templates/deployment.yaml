@@ -19,6 +19,7 @@ spec:
       labels:
         app: atlas
     spec:
+      hostname: atlas
       containers:
         - env:
           - name: ATLAS_KICKSTART_AMUNDSEN
