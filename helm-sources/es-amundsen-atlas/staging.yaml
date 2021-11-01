@@ -6,7 +6,7 @@ ES_CLUSTERNAME: elasticsearch
 ES_CLUSTERNODES: es-amundsen-atlas:9300
 ES_SECURITY: "false"
 ES_MEMORY: "5000Mi"
-ES_IMAGE: docker.elastic.co/elasticsearch/elasticsearch:6.8.13
+ES_IMAGE: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
 ES_BUSY_IMAGE: busybox:1.31.1
 ES_VOLUMENAME: poc-oss-staging-es
 ES_STORAGESIZE: "9G"
