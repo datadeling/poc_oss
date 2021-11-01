@@ -58,7 +58,7 @@ jobs:
         run: |
           helm template \
           -f ${{ steps.write_file.outputs.filePath }} \
-          ./helm-sources/staging-poc-oss-ingress-config/ > ./kubectlapply.yaml
+          ./helm-sources/staging-poc-oss-atlas-ingress-config/ > ./kubectlapply.yaml
           chmod o+w ./kubectlapply.yaml
           cat kubectlapply.yaml
 
