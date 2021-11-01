@@ -10,10 +10,10 @@ spec:
   rules:
   - http:
       paths:
-      - path: /amundsen
+      - path: /atlas
         pathType: ImplementationSpecific
         backend:
           service:
-            name: amundsenfrontend
+            name: atlas
             port:
-              number: 5000
+              number: 21000
