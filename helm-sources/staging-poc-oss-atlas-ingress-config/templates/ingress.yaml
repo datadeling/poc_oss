@@ -10,7 +10,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /atlas
+      - path: /
         pathType: ImplementationSpecific
         backend:
           service:
