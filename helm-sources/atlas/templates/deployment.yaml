@@ -23,7 +23,10 @@ spec:
       containers:
         - env:
           - name: ATLAS_KICKSTART_AMUNDSEN
-            value: {{ required "Missing value ATLAS_KICKSTART_AMUNDSEN" .Values.ATLAS_KICKSTART_AMUNDSEN | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: ATLAS_KICKSTART_AMUNDSEN
           name: atlas
           image: {{ required "Missing value ATLAS_IMAGE_NAME" .Values.ATLAS_IMAGE_NAME }}
           imagePullPolicy: Always
