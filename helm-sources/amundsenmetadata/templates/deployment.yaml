@@ -32,18 +32,30 @@ spec:
                 name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
                 key: CREDENTIALS_PROXY_PASSWORD
           - name: PROXY_HOST
-            value: {{ required "Missing value PROXY_HOST" .Values.PROXY_HOST }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: PROXY_HOST
           - name: PROXY_PORT
-            value: {{ required "Missing value PROXY_PORT" .Values.PROXY_PORT | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: PROXY_PORT
           - name: PROXY_ENCRYPTED
-            value: {{ required "Missing value PROXY_ENCRYPTED" .Values.PROXY_ENCRYPTED | quote }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: PROXY_ENCRYPTED
           - name: PROXY_CLIENT
             valueFrom:
               secretKeyRef:
                 name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
                 key: PROXY_CLIENT
           - name: METADATA_SVC_CONFIG_MODULE_CLASS
-            value: {{ required "Missing value METADATA_SVC_CONFIG_MODULE_CLASS" .Values.METADATA_SVC_CONFIG_MODULE_CLASS }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: METADATA_SVC_CONFIG_MODULE_CLASS
           name: amundsenmetadata
           image: {{ required "Missing value AMUNDSEN_METADATA_IMAGE_NAME" .Values.AMUNDSEN_METADATA_IMAGE_NAME }}
           imagePullPolicy: Always
