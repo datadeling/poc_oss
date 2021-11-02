@@ -22,9 +22,15 @@ spec:
       containers:
         - env:
           - name: SEARCHSERVICE_BASE
-            value: {{ required "Missing value SEARCHSERVICE_BASE" .Values.SEARCHSERVICE_BASE }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: SEARCHSERVICE_BASE
           - name: METADATASERVICE_BASE
-            value: {{ required "Missing value METADATASERVICE_BASE" .Values.METADATASERVICE_BASE }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: METADATASERVICE_BASE
           name: amundsenfrontend
           image: {{ required "Missing value AMUNDSEN_FRONTEND_IMAGE_NAME" .Values.AMUNDSEN_FRONTEND_IMAGE_NAME }}
           imagePullPolicy: Always

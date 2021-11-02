@@ -22,7 +22,10 @@ spec:
       containers:
         - env:
           - name: PROXY_ENDPOINT
-            value: {{ required "Missing value PROXY_ENDPOINT" .Values.PROXY_ENDPOINT }}
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: PROXY_ENDPOINT
           name: amundsensearch
           image: {{ required "Missing value AMUNDSEN_SEARCH_IMAGE_NAME" .Values.AMUNDSEN_SEARCH_IMAGE_NAME }}
           imagePullPolicy: Always
