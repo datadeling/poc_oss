@@ -27,6 +27,26 @@ spec:
               secretKeyRef:
                 name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
                 key: ATLAS_KICKSTART_AMUNDSEN
+          - name: ATLAS_HOST
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: PROXY_HOST
+          - name: ATLAS_PORT
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: PROXY_PORT
+          - name: ATLAS_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: CREDENTIALS_PROXY_USER
+          - name: ATLAS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+                key: CREDENTIALS_PROXY_PASSWORD
           name: atlas
           image: {{ required "Missing value ATLAS_IMAGE_NAME" .Values.ATLAS_IMAGE_NAME }}
           imagePullPolicy: Always

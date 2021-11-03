@@ -46,11 +46,6 @@ spec:
               secretKeyRef:
                 name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
                 key: PROXY_ENCRYPTED
-          - name: PROXY_CLIENT
-            valueFrom:
-              secretKeyRef:
-                name: poc-oss-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
-                key: PROXY_CLIENT
           - name: METADATA_SVC_CONFIG_MODULE_CLASS
             valueFrom:
               secretKeyRef:
