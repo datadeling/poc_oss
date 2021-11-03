@@ -39,11 +39,11 @@ spec:
               mountPath: "/usr/share/elasticsearch/data"
           securityContext:
             privileged: true
-        - name: increase-ulimits
-          image: {{ required "Missing value ES_BUSY_IMAGE" .Values.ES_BUSY_IMAGE }}
-          command:
-            - sysctl
-            - fs.file-max=65536
+#        - name: increase-ulimits
+#          image: {{ required "Missing value ES_BUSY_IMAGE" .Values.ES_BUSY_IMAGE }}
+#          command:
+#            - sysctl
+#            - fs.file-max=65536
       containers:
       - env:
         - name: cluster.name

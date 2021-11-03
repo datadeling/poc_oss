@@ -4,7 +4,7 @@ NAMESPACE: staging
 #elasticsearch
 ES_CLUSTERNAME: es-amundsen-atlas
 ES_CLUSTERNODES: es-amundsen-atlas:9200
-ES_SECURITY: "True"
+ES_SECURITY: "true"
 ES_MEMORY: "5000Mi"
 ES_IMAGE: docker.elastic.co/elasticsearch/elasticsearch:7.13.3
 ES_BUSY_IMAGE: busybox:1.31.1
