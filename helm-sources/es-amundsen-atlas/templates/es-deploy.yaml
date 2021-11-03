@@ -52,11 +52,6 @@ spec:
           value: {{ required "Missing value ES_SECURITY"  .Values.ES_SECURITY | quote }}
         - name: discovery.type
           value: {{ required "Missing value ES_DISCOVERY_TYPE" .Values.ES_DISCOVERY_TYPE }}
-        - name: cluster.initial_master_nodes
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.name
         - name: ELASTIC_PASSWORD
           valueFrom:
             secretKeyRef:
