@@ -4,3 +4,9 @@
 .idea
 .env
 .envrc
+
+# Jupyter
+.ipynb_checkpoints
+.ipython
+.cache
+.local
