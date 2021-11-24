@@ -13,11 +13,15 @@ dependencies:
   - h5py
   - ipympl
   - ipywidgets
+  - jupyterhub
+  - jupyterlab
   - matplotlib-base
+  - notebook
   - numba
   - numexpr
   - pandas
   - patsy
+  - plotly
   - protobuf
   - pytables
   - scikit-image
@@ -27,5 +31,6 @@ dependencies:
   - sqlalchemy
   - statsmodels
   - sympy
+  - tensorflow
   - widgetsnbextension
   - xlrd

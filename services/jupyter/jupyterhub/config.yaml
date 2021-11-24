@@ -14,15 +14,16 @@ singleuser:
   extraEnv:
     JUPYTERHUB_SINGLEUSER_APP: "jupyter_server.serverapp.ServerApp"
   image:
-    name: jupyter/datascience-notebook
-    tag: latest
-  lifecycleHooks:
-    postStart:
-      exec:
-        command:
-          [
-            "gitpuller",
-            "https://github.com/data-8/materials-fa17",
-            "master",
-            "materials-fa",
-          ]
+    name: amundhaugseth/ds-notebook
+    pullPolicy: "Always"
+    tag: 1.0.0
+  # lifecycleHooks:
+  #   postStart:
+  #     exec:
+  #       command:
+  #         [
+  #           "gitpuller",
+  #           "https://github.com/data-8/materials-fa17",
+  #           "master",
+  #           "materials-fa",
+  #         ]
