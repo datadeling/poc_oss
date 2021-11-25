@@ -16,6 +16,7 @@ dependencies:
   - jupyterhub
   - jupyterlab
   - matplotlib-base
+  - nbgitpuller
   - notebook
   - numba
   - numexpr

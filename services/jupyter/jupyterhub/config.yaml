@@ -16,14 +16,14 @@ singleuser:
   image:
     name: amundhaugseth/ds-notebook
     pullPolicy: "Always"
-    tag: 1.0.0
-  # lifecycleHooks:
-  #   postStart:
-  #     exec:
-  #       command:
-  #         [
-  #           "gitpuller",
-  #           "https://github.com/data-8/materials-fa17",
-  #           "master",
-  #           "materials-fa",
-  #         ]
+    tag: 1.0.1
+  lifecycleHooks:
+    postStart:
+      exec:
+        command:
+          [
+            "gitpuller",
+            "https://github.com/sskagemo/br_opne_data_eksempler",
+            "main",
+            "last_ned_og_analyser_enhetsregisteret.ipynb",
+          ]
