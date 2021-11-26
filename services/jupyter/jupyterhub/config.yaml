@@ -22,8 +22,5 @@ singleuser:
       exec:
         command:
           [
-            "gitpuller",
-            "https://github.com/sskagemo/br_opne_data_eksempler",
-            "main",
-            "last_ned_og_analyser_enhetsregisteret.ipynb",
+            "gitpuller", "https://github.com/datadeling/poc_oss/notebooks", "main", "notebooks"
           ]
