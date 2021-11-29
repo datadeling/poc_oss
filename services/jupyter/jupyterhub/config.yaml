@@ -16,11 +16,11 @@ singleuser:
   image:
     name: amundhaugseth/ds-notebook
     pullPolicy: "Always"
-    tag: 1.0.1
+    tag: 1.0.2
   lifecycleHooks:
     postStart:
       exec:
         command:
           [
-            "gitpuller", "https://github.com/datadeling/poc_oss/notebooks", "main", "notebooks"
+            "gitpuller", "https://github.com/datadeling/poc_oss", "main", "DataFabrikken_2_0_Demo.ipynb"
           ]

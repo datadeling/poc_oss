@@ -2,6 +2,8 @@ channels:
   - defaults
 dependencies:
   - altair
+  - azure-storage
+  - azure-storage-blob
   - beautifulsoup4
   - bokeh
   - bottleneck
@@ -17,6 +19,7 @@ dependencies:
   - jupyterlab
   - matplotlib-base
   - nbgitpuller
+  - nltk
   - notebook
   - numba
   - numexpr
