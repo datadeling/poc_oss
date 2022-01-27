@@ -69,7 +69,6 @@ app = FastAPI(title='DataFabrikken 2.0 Datalake Demo API')
 
 # https://fastapi.tiangolo.com/tutorial/sql-databases/
 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
@@ -99,7 +98,7 @@ class Item(BaseModel):
     tax: Optional[float] = None
 '''
 
-# TODO: Enable format conversions (XML/JSON/YAML etc.) with the conversion (XXXReader) routines in DataFabrikken_2_0_TBAK.ipynb
+# TODO: Enable format conversions (XML/JSON/YAML etc.) with the conversion (XXXReader) routines
 class MyDataLake():
     '''
     Class to get data from Azure blob storage
