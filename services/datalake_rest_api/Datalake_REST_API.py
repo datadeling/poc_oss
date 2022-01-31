@@ -11,6 +11,7 @@ Deploy FastAPI on Azure:
 https://techcommunity.microsoft.com/t5/apps-on-azure/deploying-a-python-fastapi-on-azure-app-service/m-p/1757016
 https://www.youtube.com/watch?v=oLdEI3zUcFg
 https://azure.microsoft.com/en-us/services/app-service/api/
+https://docs.microsoft.com/en-us/azure/app-service/overview-security
 
 Run app with: uvicorn Datalake_REST_API:app --reload
 App: http://127.0.0.1:8000
@@ -26,12 +27,9 @@ import uuid
 import math
 import json
 import timeit
-import requests
 import jsonschema
 from jsonschema import validate
-import matplotlib as mpl
-from matplotlib import pyplot as plt
-import seaborn as sns
+from urllib.parse import unquote
 import os
 from os.path import exists
 import pandas as pd
@@ -51,28 +49,28 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from starlette.responses import StreamingResponse, JSONResponse, HTMLResponse, Response
+from starlette.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Body, Path, Query, Cookie, Header
 from pydantic import BaseModel, Field, EmailStr
 
-from starlette.middleware.cors import CORSMiddleware
-# from pycaret.classification import *
-
 # For Azure Blob Storage:
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
+from azure.storage.blob import BlobServiceClient, ContainerClient, BlobClient
+# from azure.storage.blob.aio import BlobClient
 from azure.core.exceptions import ResourceNotFoundError
 
 BytesIO = pd.io.common.BytesIO
+StringIO = pd.io.common.StringIO
 
 # ------------------------------------------------------------------------------------------------------------
 
 app = FastAPI(title='DataFabrikken 2.0 Datalake Demo API')
 
 # https://fastapi.tiangolo.com/tutorial/sql-databases/
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./app.db"
+# engine = create_engine(
+#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+# )
+# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
@@ -88,15 +86,6 @@ app.add_middleware(
         allow_headers=['Content-Type','application/xml','application/json'],
     )
 
-course_items = [{"course_name": "Python"}, {"course_name": "SQLAlchemy"}, {"course_name": "NodeJS"}]
-
-'''
-class Item(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
-    tax: Optional[float] = None
-'''
 
 # TODO: Enable format conversions (XML/JSON/YAML etc.) with the conversion (XXXReader) routines
 class MyDataLake():
@@ -133,6 +122,8 @@ class MyDataLake():
         blob_client = self.container_client.get_blob_client(blob_name)
         blob_content = blob_client.download_blob().readall() # Som bytes
         # blob_content = blob_client.download_blob().content_as_text()
+        # stream = await blob_client.download_blob()
+        # data = await stream.readall()
         
         # TODO: We need to check that the blob actually exists, and give a better error message (not exception dump)
         
@@ -144,24 +135,16 @@ class MyDataLake():
             if 'CSV' in blob_name:
                 if self.DEBUG:
                     print('Getting CSV file...')
-                self.df = pd.read_csv(BytesIO(blob_content), header=header-1, sep=sep, encoding=encoding)
-                # df = pd.read_csv(StringIO(blob_content), header=1, sep=sep, encoding=encoding)
-                if download:
-                    return self.df.to_csv(index=False)
-                else:
-                    return self.df.to_dict()
+                return blob_content # TEST
             elif 'XLS' in blob_name:
                 if self.DEBUG:
                     print('Getting Excel file...')
-                self.df = pd.read_excel(BytesIO(blob_content), header=header-1, engine='openpyxl', index_col=None,
-                                       usecols=lambda x: 'Unnamed' not in x) # Convert bytes-array to pandas DataFrame 
-                if download:
-                    return self.df
-                else:
-                    return self.df.to_dict()
+                return blob_content # TEST
             elif 'JSON' in blob_name:
                 if self.DEBUG:
                     print('Getting JSON file...')
+                return blob_content # TEST
+                     
                 self.df = pd.read_json(BytesIO(blob_content), header=header-1) # Convert bytes-array to pandas DataFrame 
                 return self.df.to_dict()
         else:
@@ -175,6 +158,18 @@ class MyDataLake():
 
 dl_obj = MyDataLake()
 
+
+
+@app.on_event('startup')
+async def startup():
+    # TODO: Do init stuff here
+    pass
+
+@app.on_event('shutdown')
+async def shutdown():
+    # TODO: Do cleanup stuff here
+    pass
+
 @app.get('/')
 async def root():
     return {'message': 'DataFabrikken 2.0 API. See <url>/docs for documentation about the API'}
@@ -183,22 +178,13 @@ async def root():
 # https://fastapi.tiangolo.com/tutorial/query-params/
 # https://fastapi.tiangolo.com/advanced/custom-response/
 @app.get('/datasets/{dataset_name}')
-async def download_dataset(dataset_name:str, download: Optional[str]=None):
-    if download:
-        is_download = True
-    else:
-        is_download = False
+async def download_dataset(dataset_name:str) -> Response:
+    dataset_name = unquote(dataset_name)
+    print('Dataset name:', dataset_name)
+    # return dataset_name
 
-    dataset = await dl_obj.get_data(f'{dataset_name}.csv', sep=';', encoding='utf-8', download=is_download)
-
-    # return str(download)
-    if download:
-        # TODO: Check the dataset format from param (or in get_data()) and retrun correct media type
-        return Response(content=dataset, media_type='text/csv')
-    else:
-        return dataset
-    # Create response object for download that can be saved if 'download' param is not None
-
+    dataset = await dl_obj.get_data(f'{dataset_name}')
+    return Response(content=dataset, media_type='text/csv') # TODO: Check file extension and return correct media type!
 
 # Just for localhost
 if __name__ == '__main__':
