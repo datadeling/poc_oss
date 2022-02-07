@@ -1,13 +1,18 @@
 '''
-FastAPI REST API Service for DAtafabrikken Demo, DataLake access
+FastAPI REST API Service for Datafabrikken Demo, DataLake access
 ----------------------------------------------------------------
 https://fastapi.tiangolo.com/
 https://realpython.com/fastapi-python-web-apis/
-python -m pip install fastapi uvicorn[standard]
+https://github.com/ecerami/fastapi_azure (This example)
+https://github.com/tonybaloney/ants-azure-demos/tree/master/fastapi-functions
+https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python
+
+For running on uviorn: python -m pip install fastapi uvicorn[standard]
 
 See also: https://www.starlette.io/, https://pydantic-docs.helpmanual.io/
 
 Deploy FastAPI on Azure:
+https://medium.com/fastapi-tutorials/serverless-fastapi-on-azure-cddf8cd50482 (Azure Functions)
 https://techcommunity.microsoft.com/t5/apps-on-azure/deploying-a-python-fastapi-on-azure-app-service/m-p/1757016
 https://www.youtube.com/watch?v=oLdEI3zUcFg
 https://azure.microsoft.com/en-us/services/app-service/api/
@@ -16,23 +21,26 @@ https://docs.microsoft.com/en-us/azure/app-service/overview-security
 Various tips:
 https://dev.to/fuadrafid/fastapi-the-good-the-bad-and-the-ugly-20ob
 
-TODO: Pagination (DB only), delta, search:
-https://pypi.org/project/fastapi-pagination/
+Run app on uvicorn with: uvicorn datafabrikken_api:app --reload
 
-Run app with: uvicorn Datalake_REST_API:app --reload
-App: http://127.0.0.1:8000
-Swagger: http://127.0.0.1:8000/docs
+Application: http://127.0.0.1:7071
+Swagger page: http://localhost:7071/docs
 '''
 
-# ------------------------------------------------------------------------------------------------------------
-
+import azure.functions as func
+from .http_asgi import AsgiMiddleware
+# import mimesis
+import fastapi
+# ----
 from typing import Optional, List, Union
 
 from datetime import datetime
+
 import uuid
 import math
 import json
 import timeit
+import zlib
 # import jsonschema
 import pandas as pd
 # from jsonschema import validate
@@ -68,31 +76,8 @@ from azure.core.exceptions import ResourceNotFoundError
 # BytesIO = pd.io.common.BytesIO
 # StringIO = pd.io.common.StringIO
 
-# ------------------------------------------------------------------------------------------------------------
 
-app = FastAPI(title='DataFabrikken 2.0 Datalake Demo API')
-
-# https://fastapi.tiangolo.com/tutorial/sql-databases/
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./app.db"
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-# )
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base = declarative_base()
-
-origins = [
-    '*'
-]
-
-app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,
-        allow_credentials=True,
-        allow_methods=['GET','POST'],
-        allow_headers=['Content-Type','application/xml','application/json'],
-    )
-
+app = fastapi.FastAPI(title='DataFabrikken 2.0 Datalake Demo API')
 
 # TODO: Enable format conversions (XML/JSON/YAML etc.) with the conversion (XXXReader) routines
 class MyDataLake():
@@ -184,7 +169,19 @@ async def shutdown():
 
 @app.get('/')
 async def root():
-    return {'message': 'DataFabrikken 2.0 API. See <url>/docs for Swagger API documentation'}
+    return {'message': 'DataFabrikken 2.0 API (TEST). See <url>/docs for Swagger API documentation'}
+
+'''
+@app.get("/user/{user_id}")
+async def get_user(user_id: int):
+    fake_user = mimesis.Person()
+    return {
+        "user_id": user_id,
+        "username": fake_user.username(),
+        "firstname": fake_user.first_name(),
+        "lastname": fake_user.last_name(),
+    }
+'''
 
 # Return dataset content or HTTPException if not found
 # https://fastapi.tiangolo.com/tutorial/query-params/
@@ -197,6 +194,7 @@ async def download_dataset(dataset_name:str, page_no:Optional[int]=None, per_pag
 
     if '.XLS' in dataset_name.upper():
         extension = 'excel'
+        # Content-Type': 'application/vnd.ms-excel
     if '.CSV' in dataset_name.upper():
         extension = 'csv'
     if '.XML' in dataset_name.upper():
@@ -213,8 +211,8 @@ async def download_dataset(dataset_name:str, page_no:Optional[int]=None, per_pag
         return HTTPException(status_code=404, detail=f'File \'{dataset_name}\' does not exist.')
 
     return Response(content=dataset, media_type=f'text/{extension}')
- 
 
-# For testing on localhost
-if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000)
+# --------------------------------------------------------------------------------------------------
+
+def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
+    return AsgiMiddleware(app).handle(req, context)
